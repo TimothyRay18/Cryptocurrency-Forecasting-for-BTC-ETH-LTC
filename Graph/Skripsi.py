@@ -24,13 +24,13 @@ class Preprocessing:
         missing_cols = df.isnull().stack()[lambda x: x].index.tolist()
         if missing_cols == []:
             print("No missing value")
-            return False
+            return df
         else:
             print(missing_col)
             for x in missing_cols:
                 df.at[x[0], x[1]] = df.at[x[0]-1, x[1]]
             print("Missing value ok")
-            return True
+            return df
     def minmax_scale(df):
         scaler = MinMaxScaler()
         df_scaled = scaler.fit_transform(np.array(df))
@@ -59,18 +59,18 @@ class Evaluation:
         squared_differences = [d**2 for d in differences]
         sum_squared_differences = sum(squared_differences)
         mean_squared_error = sum_squared_differences / len(y)
-        return mean_squared_error**0.5
+        return (mean_squared_error**0.5)[0]
     def mae (y, yhat):
         differences = [y[i] - yhat[i] for i in range(len(y))]
         absolute_differences = [abs(x) for x in differences]
         sum_absolute_difference = sum(absolute_differences)
         mean_absolute_error = sum_absolute_difference / len(y)
-        return mean_absolute_error
+        return mean_absolute_error[0]
     def mape (y, yhat):
         divided_differences = [abs((y[i] - yhat[i])/y[i]) for i in range(len(y))]
         sum_absolute_difference = sum(divided_differences)
         mean_absolute_percentage_error = sum_absolute_difference / len(y)
-        return mean_absolute_percentage_error*100
+        return (mean_absolute_percentage_error*100)[0]
     
 class LSTMUnit:
     def train_lstm(train_X, train_y, test_X, test_y, neuron, epoch, batch):
