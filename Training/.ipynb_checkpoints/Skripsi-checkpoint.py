@@ -11,11 +11,10 @@ from tensorflow.keras import initializers
 tf.random.set_seed(42)
 
 class Preprocessing:
-    def feature_selection(df):
+    def sort_df(df):
         df_sorted = df.sort_values(by=['Date']).copy()
-        FEATURES = ['Open', 'High', 'Low', 'Volume USDT', 'Close']
-        df_filtered = df_sorted[FEATURES].reset_index(drop=True)
-        return df_filtered
+        df_sorted_index = df_sorted.reset_index(drop=True)
+        return df_sorted_index
     def handle_duplicate(df):
         df = df.drop_duplicates()
         print("duplicate ok")
@@ -32,8 +31,9 @@ class Preprocessing:
             print("Missing value ok")
             return df
     def minmax_scale(df):
+        FEATURES = ['Open', 'High', 'Low', 'Volume USDT', 'Close']
         scaler = MinMaxScaler()
-        df_scaled = scaler.fit_transform(np.array(df))
+        df_scaled = scaler.fit_transform(np.array(df[FEATURES]))
         
         scaler_pred = MinMaxScaler()
         pred_scaled = scaler_pred.fit_transform(np.array(df['Close']).reshape(-1,1))
